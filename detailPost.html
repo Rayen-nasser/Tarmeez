@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daitel Of Post</title>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+  <!-- loader -->
+  <div id="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </div>
+  <!-- show alert -->
+  <div id="alertSucess" class="fade show" style="position:fixed;right: 0;bottom: 0;width: 30%;z-index: 99999;"></div>
+  <!-- register model -->
+  <div class="modal fade" id="register-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Register A New User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label" >Name</label>
+              <input type="text" class="form-control" id="Rname-input">
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label" >Username</label>
+              <input type="text" class="form-control" id="Rusername-input">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label" >Password</label>
+              <input type="password" class="form-control" id="Rpassword-input">
+            </div>
+            <div class="mb-3">
+              <label for="formFile" class="form-label">Profail image</label>
+              <input class="form-control" type="file" id="formFile">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
+          <button type="button" class="btn btn-primary" onclick="registerClick()">Register</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+  <!-- login model -->
+  <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label" >Username</label>
+              <input type="text" class="form-control" id="username-input" value="yarob99">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label" >Password</label>
+              <input type="password" class="form-control" id="password-input" value="123456">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="loginClick()">Loigin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- navBar -->    
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <div class="col-9">
+        <nav class="navbar shadow navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarTogglerDemo03"
+              aria-controls="navbarTogglerDemo03"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="home.html">Tarmeez</a>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="home.html"
+                    >Home</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    href="profail.html"
+                    tabindex="-1"
+                    aria-disabled="true"
+                    >Porfile</a
+                  >
+                </li>
+              </ul>
+                <div id="profile"></div>
+                <div id="login-div">
+                  <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#login-modal" id="btnLogin">
+                    Login
+                  </button>
+                  <button class="btn btn-outline-success" type="button" data-bs-toggle="modal" data-bs-target="#register-modal"  id="btnRegister">
+                    Register
+                  </button>
+                </div>
+                <div id="logout-div">
+                  <img id="profile-img"  class="rounded-circle border border-3 " style="width: 40px; height: 40px" /> <b id="nameOfUser"></b>
+                  <button type="button" class="btn btn-outline-danger mx-2" onclick="logoutClick()" id="btnLogout">
+                    Logout
+                  </button>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <!-- post -->
+  <div id="post"></div>
+  <script src="./js/posts.js"></script>
+  <script src="./js/mainLogic.js"></script>
+  <script src="./node_modules//bootstrap/dist/js/bootstrap.min.js"></script>
+  <link
+    rel="stylesheet"
+    href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
+  />
+  <script>
+    const urlParms = new URLSearchParams(window.location.search)
+    let id  = urlParms.get('id')
+    
+    getPost(id)
+    setupUI(id)
+
+function getPost(urlId){ 
+  toggelLoader(true)
+  axios.get(`${baseUrl}/posts/${urlId}`)
+  .then(response =>{
+    return response.data
+  })
+  .then((res) =>{
+    let profailImage = './imgs/lost.png'
+      document.getElementById('post').innerHTML = ""
+      response = res.data
+      comments = res.data.comments
+      if(Object.keys(response.author.profile_image).length !== 0){
+      profailImage = response.author.profile_image
+    }
+      let inputComment = ""
+    if(localStorage.getItem('token')!= null){
+      inputComment = `<div class="container mb-4 input-group" >
+                          <input id="create-comment-input" type="text" class="form-control" placeholder="Create your comment" aria-label="Recipient's username" aria-describedby="button-addon2">
+                          <button id="send-comment" class="btn btn-outline-secondary" type="button" onclick="submitComment()">Send</button>
+                        </div>`
+    }
+
+    let post = `<div class="container">
+        <div class="mt-4 d-flex justify-content-center ">
+          <div class="col-9 ">
+            <!-- start poste -->
+              <div class="card rounded">
+                <div class="card-header">
+                  <span style="cursor: pointer;" onclick="getProfail('${encodeURIComponent(JSON.stringify(response.author))}')">
+                    <img
+                    src="${profailImage}"
+                    class="rounded-circle border border-3"
+                    style="width: 40px; height: 40px"
+                    />
+                    <b>${response.author.username}</b>
+                  </span>
+                </div>
+                <div class="card-body">
+                  <img
+                    class=" card-img-top"
+                    src="${response.image}"
+                    alt=""
+                  />
+                  <span class="card-text">
+                    <small class="text-muted">${response.created_at}</small>
+                  </span>
+                  <h5 class="card-title mt-2">${response.title === null ? response.title = '' : response.title }</h5>
+                  <p class="card-text">
+                    ${response.body}
+                  </p>
+                  <hr>
+                  <span>
+                    <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                    </svg>(${response.comments_count})Comments
+                    <span id="tags-${response.id}"></span>
+                  </span>
+                </div>
+            <!-- end postes -->
+            <div id='allComments-${response.id}'></div>
+              ${inputComment}
+            </div>
+          </div>
+        </div>
+      </div>`
+      document.getElementById('post').innerHTML = post
+        document.getElementById(`allComments-${id}`).innerHTML = ''
+      for (const comment of comments) {
+        content = `<div class="card-body" style="height: 100px">
+        <img
+          src="${comment.author.profile_image}"
+          class="rounded-circle border border-3"
+          style="width: 30px; height: 30px"
+        />
+        <div class=" rounded p-2" style="margin-left: 37px;transform:translatey(-30px);background-color:#F0F2F5;">
+          <b>${comment.author.username}</b>
+          <div >${comment.body}</div>
+        </div>
+      </div>`
+      document.getElementById(`allComments-${id}`).innerHTML += content
+      }
+    })
+    .finally(()=>{
+      toggelLoader(false)
+    })
+  }
+  function submitComment() {
+      let commentInput = document.getElementById('create-comment-input').value
+      let token = localStorage.getItem("token")
+      const headers = {
+          "authorization": `Bearer ${token}`,
+        }
+      let params = {
+        "body": commentInput,
+      }
+      toggelLoader()
+      axios.post(`${baseUrl}/posts/${id}/comments`,params,{
+        headers :{
+          "authorization": `Bearer ${token}`,
+        }
+      }).then((response)=>{
+        showAlert("The Comment Send successfuly")
+        getPost(id)
+      }).catch((error)=>{
+        const message = error.response.data.message
+        showAlert(message,'danger')
+      })
+      .finally(()=>{
+        toggelLoader(false)
+      })
+      commentInput.innerHTML = ""
+    }
+  </script>
+  </body>
+</html>

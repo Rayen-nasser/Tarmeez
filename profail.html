@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profail</title>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <!-- loader -->
+  <div id="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </div>
+  <!-- add Post -->
+  <div class="bg-primary rounded-pill " id="addPost" onclick="addBtnClicked()"><span>+</span></div>
+  <!-- show alert -->
+  <div id="alertSucess" class="fade show" style="position:fixed;right: 0;bottom: 0;width: 30%;z-index: 99999;"></div>
+  <!-- register model -->
+  <div class="modal fade" id="register-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title" id="exampleModalLabel">Register A New User</h5>
+             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body">
+             <form>
+               <div class="mb-3">
+                 <label for="recipient-name" class="col-form-label" >Name</label>
+                 <input type="text" class="form-control" id="Rname-input">
+               </div>
+               <div class="mb-3">
+                 <label for="recipient-name" class="col-form-label" >Username</label>
+                 <input type="text" class="form-control" id="Rusername-input">
+               </div>
+               <div class="mb-3">
+                 <label for="message-text" class="col-form-label" >Password</label>
+                 <input type="password" class="form-control" id="Rpassword-input">
+               </div>
+               <div class="mb-3">
+                 <label for="formFile" class="form-label">Profail image</label>
+                 <input class="form-control" type="file" id="formFile">
+               </div>
+             </form>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
+             <button type="button" class="btn btn-primary" onclick="registerClick()">Register</button>
+           </div>
+         </div>
+       </div>
+  </div> 
+  <!-- create and edit post model-->
+  <div class="modal fade" id="create-post-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create A New Post</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label  class="col-form-label" >Title</label>
+              <input type="text" class="form-control" id="post-title-input">
+              <input type="hidden" id="idPost" value="" >
+            </div>
+            <div class="mb-3">
+              <label  class="col-form-label" >Body</label>
+              <textarea class="form-control" id="post-body-input"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="formFile" class="form-label">Image</label>
+              <input class="form-control" type="file" id="post-image-input">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
+          <button type="button" class="btn btn-primary" onclick="createNewPostClick()" id="btn-post">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- login model -->
+  <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body">
+             <form>
+               <div class="mb-3">
+                 <label for="recipient-name" class="col-form-label" >Username</label>
+                 <input type="text" class="form-control" id="username-input" value="yarob99">
+               </div>
+               <div class="mb-3">
+                 <label for="message-text" class="col-form-label" >Password</label>
+                 <input type="password" class="form-control" id="password-input" value="123456">
+               </div>
+             </form>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+             <button type="button" class="btn btn-primary" onclick="loginClick()">Loigin</button>
+           </div>
+         </div>
+       </div>
+  </div>
+  <!--choise Delete Post Modal-->
+  <div class="modal fade" id="DeleteModelPost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="ModelPost">Delete Post</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure about about that ?
+        </div>
+        <input type="hidden" value="" id="sendIdPost">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-primary" onclick="deletePost()">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- navBar -->    
+  <div class="container">
+       <div class="d-flex justify-content-center">
+         <div class="col-9">
+           <nav class="navbar shadow navbar-expand-lg navbar-light bg-light">
+             <div class="container-fluid">
+               <button
+                 class="navbar-toggler"
+                 type="button"
+                 data-bs-toggle="collapse"
+                 data-bs-target="#navbarTogglerDemo03"
+                 aria-controls="navbarTogglerDemo03"
+                 aria-expanded="false"
+                 aria-label="Toggle navigation"
+               >
+                 <span class="navbar-toggler-icon"></span>
+               </button>
+               <a class="navbar-brand" href="home.html">Tarmeez</a>
+               <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                   <li class="nav-item">
+                     <a class="nav-link active" aria-current="page" href="home.html"
+                       >Home</a
+                     >
+                   </li>
+                   <li class="nav-item">
+                     <a class="nav-link" href="#">Link</a>
+                   </li>
+                   <li class="nav-item">
+                     <a
+                       class="nav-link"
+                       href="#"
+                       tabindex="-1"
+                       aria-disabled="true"
+                       href="profail.html"
+                       >Porfile</a
+                     >
+                   </li>
+                 </ul>
+                   <div id="profile"></div>
+                   <div id="login-div">
+                     <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#login-modal" id="btnLogin">
+                       Login
+                     </button>
+                     <button class="btn btn-outline-success" type="button" data-bs-toggle="modal" data-bs-target="#register-modal"  id="btnRegister">
+                       Register
+                     </button>
+                   </div>
+                   <div id="logout-div">
+                     <img id="profile-img"  class="rounded-circle border border-3 " style="width: 40px; height: 40px" /> <b id="nameOfUser"></b>
+                     <button type="button" class="btn btn-outline-danger mx-2" onclick="logoutClick()" id="btnLogout">
+                       Logout
+                     </button>
+               </div>
+             </div>
+           </nav>
+         </div>
+       </div>
+  </div>
+  <!-- profail -->
+  <div id="profail"></div>
+  <div id="posts"></div>
+  <!-- post -->
+  <div id="postsUser"></div>
+  <script src="./js/mainLogic.js"></script>
+  <script src="./js/posts.js"></script>
+  <script src="./node_modules//bootstrap/dist/js/bootstrap.min.js"></script>
+  <link
+  rel="stylesheet"
+  href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
+  />
+  <script>
+    const urlParms = new URLSearchParams(window.location.search)
+    let id  = urlParms.get('id')
+    
+    setupUI()
+    userProfail(id)
+    getPostsUser(id)
+    
+function userProfail(id) {
+  let urlId  = id
+  if(urlId == null){
+    urlId = JSON.parse(localStorage.getItem('user')).id
+  }
+    axios.get(`${baseUrl}/users/${urlId}`)
+    .then((response) => {
+      return response.data.data;
+    })
+    .then((response)=>{
+      let profailImage = './imgs/lost.png'
+      if(Object.keys(response.profile_image).length !== 0){
+        profailImage = response.profile_image 
+      }
+      document.getElementById('profail').innerHTML = ""
+      let profail = `<div class="container mt-4 ">
+    <div class="d-flex justify-content-center ">
+      <div class="col-9">
+        <div class="card shadow">
+          <div class="card-body text-center">
+            <div class="row ">
+              <div class="col-4" >
+                <img src="${profailImage}" class="rounded-circle border border-3"style="width: 150px; height: 150px">
+              </div>
+              <div class="col-8 text-center" style="letter-spacing: 3px">
+                <div class="fw-light fs-2">${response.name}</div>
+                <div class="fw-light fs-2">${response.username}</div>
+                <div class=" fw-light fs-2">${response.email ===  null ? 'not found': response.email}</div>
+              </div>
+            </div>
+            
+            
+          </div>
+          <div class="card-footer text-center">
+            <div class="row fs-5">
+              <div class="col-6" >
+                <span class="fs-1">${response.posts_count}</span>
+                <span class="text-black-50 fs-6">Posts</span>
+              </div>
+              <div class="col-6">
+                <span class="fs-1">${response.comments_count}</span>
+                <span class="text-black-50 fs-6">Comments</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`
+  document.getElementById('profail').innerHTML = profail
+    })
+    .catch(error => {
+      console.log("User not found:", error); // Log the error and provide a user-friendly message
+      throw error; // Optionally re-throw the error to propagate it to the caller
+    })
+}
+
+function getPostsUser(id){
+  let urlId  = id
+  if(urlId == null){
+    urlId = JSON.parse(localStorage.getItem('user')).id
+  }
+  toggelLoader(true);
+  axios.get(`${baseUrl}/users/${urlId}/posts`)
+  .then(response =>{
+    return response.data
+  })  
+  .then((res) =>{
+      for (const response of res.data) {
+        let profailImage = './imgs/lost.png'
+        if(Object.keys(response.author.profile_image).length !== 0){
+          profailImage = response.author.profile_image 
+        }
+        let user = getCurrentUser()
+        let isMyPost =  user.id == response.author.id 
+        let editBtnContent = ''
+        if(isMyPost){
+          editBtnContent = `<svg onclick="editPost('${encodeURIComponent(JSON.stringify(response))}')" style="cursor: pointer;" class="me-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            </svg>
+                            <svg onclick="confirmPostDelete('${encodeURIComponent(JSON.stringify(response))}')" style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                            </svg>` 
+        }
+          let post = `<div class="container">
+          <div class="mt-4 d-flex justify-content-center ">
+            <div class="col-9 ">
+              <!-- start poste -->
+                <div class="card rounded">
+                  <div class="card-header">
+                    <span style="cursor: pointer;" onclick="getProfail('${encodeURIComponent(JSON.stringify(response.author))}')">
+                      <img
+                        src="${profailImage}"
+                        class="rounded-circle border border-3"
+                        style="width: 40px; height: 40px"
+                      />
+                      <b>${response.author.username}</b>
+                    </span>
+                    <span class="float-end" >
+                      ${editBtnContent}
+                    </span>
+                  </div>
+                  <div class="card-body" style="cursor: pointer;" onclick="getPostDetail(${response.id})">
+                    <img
+                      class=" card-img-top"
+                      src="${response.image}"
+                      alt=""
+                    />
+                    <span class="card-text">
+                      <small class="text-muted">${response.created_at}</small>
+                    </span>
+                    <h5 class="card-title mt-2">${response.title === null ? response.title = '' : response.title }</h5>
+                    <p class="card-text">
+                      ${response.body}
+                    </p>
+                    <hr>
+                    <span id='nbComments-${response.id}' onclick="getComments(${response.id})">
+                      <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                      <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                      </svg>(${response.comments_count})Comments
+                      <span id="tags-${response.id}"></span>
+                    </span>
+                  </div>
+              <!-- end postes -->
+              <div id='allComments-${response.id}'></div>
+              </div>
+            </div>
+          </div>
+        </div>`
+        document.getElementById('posts').innerHTML += post 
+      document.getElementById(`tags-${response.id}`).innerHTML =""
+      tg = response.tags
+
+        for (tag of tg) {
+          document.querySelector(`tags-${response.id}`).innerHTML += `<button class="btn btn-sm rounded-5" type="button" style="background-color: gray; color: white;">${tag.name}</button>`
+        }
+      }
+  })
+  .finally(()=>{
+    toggelLoader(false)
+  })
+  }
+  </script>
+</body>
+</html>
